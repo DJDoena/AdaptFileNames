@@ -117,27 +117,37 @@ namespace AdaptFileNames
                 .OrderBy(fn => fn.Name)
                 .ToList();
 
-            for (var fileIndex = 0; fileIndex < files.Count; fileIndex++)
+            if (files.Count == 1)
             {
-                var file = files[fileIndex];
-
-                var oldName = Path.GetFileNameWithoutExtension(file.Name);
-
-                var fileNumber = GetFileNumber(fileIndex, files.Count);
-
-                var newName = $"{fileNumber} {folder.Name}";
-
-                if (oldName != newName)
+                RenameMp3File(folder.Name, files[0]);
+            }
+            else
+            {
+                for (var fileIndex = 0; fileIndex < files.Count; fileIndex++)
                 {
-                    Console.WriteLine($"{oldName} -> {newName}");
+                    var fileNumber = GetFileNumber(fileIndex, files.Count);
 
-                    file.MoveTo(Path.Combine(file.DirectoryName, $"{newName}{file.Extension}"));
+                    var newName = $"{fileNumber} {folder.Name}";
+
+                    RenameMp3File(newName, files[fileIndex]);
                 }
             }
 
             RenameCover(folder);
 
             RenameXmlFile(folder);
+        }
+
+        private static void RenameMp3File(string newName, FileInfo file)
+        {
+            var oldName = Path.GetFileNameWithoutExtension(file.Name);
+
+            if (oldName != newName)
+            {
+                Console.WriteLine($"{oldName} -> {newName}");
+
+                file.MoveTo(Path.Combine(file.DirectoryName, $"{newName}{file.Extension}"));
+            }
         }
 
         private static void RenameXmlFile(DirectoryInfo folder)
