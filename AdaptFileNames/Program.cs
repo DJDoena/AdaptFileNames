@@ -167,28 +167,25 @@ namespace AdaptFileNames
 
         private static string GetFileNumber(int fileIndex, int fileCount)
         {
-            var fileNumber = fileIndex + 1;
+            var padCount = GetDigitCount(fileCount);
 
-            if (fileCount >= 10000)
+            var fileNumber = (fileIndex + 1).ToString().PadLeft(padCount, '0');
+
+            return fileNumber;
+        }
+
+        private static int GetDigitCount(int number)
+        {
+            var count = 0;
+
+            while (number != 0)
             {
-                return $"{fileNumber:D5}";
+                number /= 10;
+
+                count++;
             }
-            else if (fileCount >= 1000)
-            {
-                return $"{fileNumber:D4}";
-            }
-            else if (fileCount >= 100)
-            {
-                return $"{fileNumber:D3}";
-            }
-            if (fileCount >= 10)
-            {
-                return $"{fileNumber:D2}";
-            }
-            else
-            {
-                return fileNumber.ToString();
-            }
+
+            return count;
         }
 
         private enum FileType
