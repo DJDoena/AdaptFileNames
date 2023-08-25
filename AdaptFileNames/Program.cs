@@ -1,12 +1,22 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-namespace AdaptFileNames
+namespace DoenaSoft.AdaptFileNames
 {
     internal static class Program
     {
         private static FileType _fileType;
+
+        private static Dictionary<string, string> _renames;
+
+        private static readonly object _lock;
+
+        static Program()
+        {
+            _lock = new();
+        }
 
         private static int Main(string[] args)
         {
@@ -44,7 +54,23 @@ namespace AdaptFileNames
                 _fileType = FileType.EBooks;
             }
 
-            ProcessFolder(new DirectoryInfo(args[1]));
+            try
+            {
+                _renames = new();
+
+                ProcessFolder(new DirectoryInfo(args[1]));
+
+                ExecuteRename();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+
+                if (ex.InnerException != null)
+                {
+                    Console.WriteLine(ex.InnerException.Message);
+                }
+            }
 
             Console.WriteLine("Press <Enter> to exit.");
             Console.ReadLine();
@@ -90,11 +116,40 @@ namespace AdaptFileNames
 
                 if (oldName != newName)
                 {
-                    file.MoveTo(Path.Combine(file.DirectoryName, $"{newName}{file.Extension}"));
+                    TryAdd(file, Path.Combine(file.DirectoryName, $"{newName}{file.Extension}"));
                 }
             }
 
             RenameCover(folder);
+        }
+
+        private static void TryAdd(FileInfo sourceFile, string targetFileName)
+        {
+            var sourceFileName = Path.GetFullPath(sourceFile.FullName);
+
+            targetFileName = Path.GetFullPath(targetFileName);
+
+            if (sourceFileName == targetFileName)
+            {
+                return;
+            }
+
+            if (File.Exists(targetFileName))
+            {
+                throw new Exception($"Target file '{targetFileName}' already exists on disk!");
+            }
+
+            lock (_lock)
+            {
+                try
+                {
+                    _renames.Add(targetFileName, sourceFileName);
+                }
+                catch (Exception ex)
+                {
+                    throw new Exception($"Target file '{targetFileName}' is already target of source file '{sourceFileName}", ex);
+                }
+            }
         }
 
         private static void RenameCover(DirectoryInfo folder)
@@ -106,7 +161,7 @@ namespace AdaptFileNames
             {
                 if (file.Name != "cover.jpg")
                 {
-                    file.MoveTo(Path.Combine(file.DirectoryName, "cover.jpg"));
+                    TryAdd(file, Path.Combine(file.DirectoryName, "cover.jpg"));
                 }
             }
         }
@@ -144,9 +199,7 @@ namespace AdaptFileNames
 
             if (oldName != newName)
             {
-                Console.WriteLine($"{oldName} -> {newName}");
-
-                file.MoveTo(Path.Combine(file.DirectoryName, $"{newName}{file.Extension}"));
+                TryAdd(file, Path.Combine(file.DirectoryName, $"{newName}{file.Extension}"));
             }
         }
 
@@ -160,7 +213,7 @@ namespace AdaptFileNames
 
                 if (file.Name != newFileName)
                 {
-                    file.MoveTo(Path.Combine(file.DirectoryName, newFileName));
+                    TryAdd(file, Path.Combine(file.DirectoryName, newFileName));
                 }
             }
         }
@@ -186,6 +239,29 @@ namespace AdaptFileNames
             }
 
             return count;
+        }
+
+        private static void ExecuteRename()
+        {
+            try
+            {
+                foreach (var kvp in _renames)
+                {
+                    var sourceFile = new FileInfo(kvp.Value);
+
+                    var targetFile = new FileInfo(kvp.Key);
+
+                    Console.WriteLine($@"{sourceFile.DirectoryName}\{sourceFile.Name} -> {targetFile.Name}");
+
+                    sourceFile.MoveTo(targetFile.FullName);
+
+                    File.SetAttributes(targetFile.FullName, FileAttributes.Archive);
+                }
+            }
+            finally
+            {
+                _renames.Clear();
+            }
         }
 
         private enum FileType
