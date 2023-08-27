@@ -1,28 +1,27 @@
-﻿namespace DoenaSoft.AdaptFileNames
+﻿namespace DoenaSoft.AdaptFileNames;
+
+internal static class FileNumberHelper
 {
-    internal static class FileNumberHelper
+    internal static string GetFileNumber(int fileIndex, int fileCount)
     {
-        internal static string GetFileNumber(int fileIndex, int fileCount)
+        var padCount = GetDigitCount(fileCount);
+
+        var fileNumber = (fileIndex + 1).ToString().PadLeft(padCount, '0');
+
+        return fileNumber;
+    }
+
+    private static int GetDigitCount(int number)
+    {
+        var count = 0;
+
+        while (number != 0)
         {
-            var padCount = GetDigitCount(fileCount);
+            number /= 10;
 
-            var fileNumber = (fileIndex + 1).ToString().PadLeft(padCount, '0');
-
-            return fileNumber;
+            count++;
         }
 
-        private static int GetDigitCount(int number)
-        {
-            var count = 0;
-
-            while (number != 0)
-            {
-                number /= 10;
-
-                count++;
-            }
-
-            return count;
-        }
+        return count;
     }
 }
