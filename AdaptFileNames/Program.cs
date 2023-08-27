@@ -180,7 +180,7 @@ namespace DoenaSoft.AdaptFileNames
             {
                 for (var fileIndex = 0; fileIndex < files.Count; fileIndex++)
                 {
-                    var fileNumber = GetFileNumber(fileIndex, files.Count);
+                    var fileNumber = FileNumberHelper.GetFileNumber(fileIndex, files.Count);
 
                     var newName = $"{fileNumber} {folder.Name}";
 
@@ -216,29 +216,6 @@ namespace DoenaSoft.AdaptFileNames
                     TryAdd(file, Path.Combine(file.DirectoryName, newFileName));
                 }
             }
-        }
-
-        private static string GetFileNumber(int fileIndex, int fileCount)
-        {
-            var padCount = GetDigitCount(fileCount);
-
-            var fileNumber = (fileIndex + 1).ToString().PadLeft(padCount, '0');
-
-            return fileNumber;
-        }
-
-        private static int GetDigitCount(int number)
-        {
-            var count = 0;
-
-            while (number != 0)
-            {
-                number /= 10;
-
-                count++;
-            }
-
-            return count;
         }
 
         private static void ExecuteRename()
