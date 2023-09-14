@@ -5,10 +5,12 @@
 		<OutputType>Exe</OutputType>
 		<GenerateAssemblyInfo>false</GenerateAssemblyInfo>
 		<Platforms>x64</Platforms>
+		<Version>$([System.DateTime]::Now.ToString("yyyy.MM.dd.HHmm"))</Version>
+		<FileVersion>$([System.DateTime]::Now.ToString("yyyy.MM.dd.HHmm"))</FileVersion>
 	</PropertyGroup>
 
 	<ItemGroup>
-	  <Compile Include="..\AdaptFileNames\FileNumberHelper.cs" Link="FileNumberHelper.cs" />
+		<Compile Include="..\AdaptFileNames\FileNumberHelper.cs" Link="FileNumberHelper.cs" />
 	</ItemGroup>
 
 </Project>
