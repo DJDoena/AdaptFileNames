@@ -13,7 +13,7 @@ internal static class Program
     {
         if (args.Length != 2)
         {
-            Console.WriteLine("Invalid arg count: " + args.Length);
+            Console.WriteLine($"Invalid arg count: {args.Length}: {PrintArgs(args)}");
             Console.WriteLine("Expected:");
             Console.WriteLine("[0] = mp3/epub");
             Console.WriteLine("[1] = folder path");
@@ -68,6 +68,14 @@ internal static class Program
 
         return 0;
     }
+
+    private static string PrintArgs(string[] args)
+        => string.Join(" ", args.Select(PrintArg));
+
+    private static string PrintArg(string arg)
+        => !string.IsNullOrEmpty(arg) && !arg.Contains(' ')
+            ? arg
+            : $"\"{arg}\"";
 
     private static void ProcessFolder(DirectoryInfo folder)
     {
