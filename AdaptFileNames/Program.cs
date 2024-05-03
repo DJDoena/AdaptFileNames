@@ -1,7 +1,7 @@
 ﻿using System;
-using System.IO;
 using System.Linq;
-using DoenaSoft.DownloadRenamer;
+using DoenaSoft.AbstractionLayer.IOServices;
+using SIO = System.IO;
 
 namespace DoenaSoft.AdaptFileNames;
 
@@ -9,8 +9,17 @@ internal static class Program
 {
     private static FileType _fileType;
 
+    private static IIOServices _ioServices;
+
+    private static IRenameQueue _renameQueue;
+
+    private static IPath Path
+        => _ioServices.Path;
+
     private static int Main(string[] args)
     {
+        _ioServices = new IOServices();
+
         if (args.Length != 2)
         {
             Console.WriteLine($"Invalid arg count: {args.Length}: {PrintArgs(args)}");
@@ -28,7 +37,7 @@ internal static class Program
 
             return -2;
         }
-        else if (!Directory.Exists(args[1]))
+        else if (!_ioServices.Folder.Exists(args[1]))
         {
             Console.WriteLine("Folder does not exist: " + args[1]);
             Console.ReadLine();
@@ -47,11 +56,13 @@ internal static class Program
 
         try
         {
-            RenameQueue.StartRename();
+            _renameQueue = new RenameQueue(_ioServices);
 
-            ProcessFolder(new DirectoryInfo(args[1]));
+            _renameQueue.StartRename();
 
-            RenameQueue.FinishRename();
+            ProcessFolder(_ioServices.GetFolderInfo(args[1]));
+
+            _renameQueue.FinishRename();
         }
         catch (Exception ex)
         {
@@ -77,9 +88,9 @@ internal static class Program
             ? arg
             : $"\"{arg}\"";
 
-    private static void ProcessFolder(DirectoryInfo folder)
+    private static void ProcessFolder(IFolderInfo folder)
     {
-        var subFolders = folder.GetDirectories("*.*", SearchOption.TopDirectoryOnly);
+        var subFolders = folder.GetDirectories("*.*", SIO.SearchOption.TopDirectoryOnly);
 
         foreach (var subFolder in subFolders)
         {
@@ -96,10 +107,10 @@ internal static class Program
         }
     }
 
-    private static void ProcessEBook(DirectoryInfo folder)
+    private static void ProcessEBook(IFolderInfo folder)
     {
-        var files = folder.GetFiles("*.epub", SearchOption.TopDirectoryOnly)
-            .Concat(folder.GetFiles("*.mobi", SearchOption.TopDirectoryOnly))
+        var files = folder.GetFiles("*.epub", SIO.SearchOption.TopDirectoryOnly)
+            .Concat(folder.GetFiles("*.mobi", SIO.SearchOption.TopDirectoryOnly))
             .ToList();
 
         if (files.Count != 0 && files.Count != 2)
@@ -115,30 +126,30 @@ internal static class Program
 
             if (oldName != newName)
             {
-                RenameQueue.TryAdd(file, Path.Combine(file.DirectoryName, $"{newName}{file.Extension}"));
+                _renameQueue.Add(file, Path.Combine(file.FolderName, $"{newName}{file.Extension}"));
             }
         }
 
         RenameCover(folder);
     }
 
-    private static void RenameCover(DirectoryInfo folder)
+    private static void RenameCover(IFolderInfo folder)
     {
-        var coverfiles = folder.GetFiles("*.jpg", SearchOption.TopDirectoryOnly)
-            .Concat(folder.GetFiles("*.jpeg", SearchOption.TopDirectoryOnly));
+        var coverfiles = folder.GetFiles("*.jpg", SIO.SearchOption.TopDirectoryOnly)
+            .Concat(folder.GetFiles("*.jpeg", SIO.SearchOption.TopDirectoryOnly));
 
         foreach (var file in coverfiles)
         {
             if (file.Name != "cover.jpg")
             {
-                RenameQueue.TryAdd(file, Path.Combine(file.DirectoryName, "cover.jpg"));
+                _renameQueue.Add(file, Path.Combine(file.FolderName, "cover.jpg"));
             }
         }
     }
 
-    private static void ProcessAudioBook(DirectoryInfo folder)
+    private static void ProcessAudioBook(IFolderInfo folder)
     {
-        var files = folder.GetFiles("*.mp3", SearchOption.TopDirectoryOnly)
+        var files = folder.GetFiles("*.mp3", SIO.SearchOption.TopDirectoryOnly)
             .OrderBy(fn => fn.Name)
             .ToList();
 
@@ -163,19 +174,19 @@ internal static class Program
         RenameXmlFile(folder);
     }
 
-    private static void RenameMp3File(string newName, FileInfo file)
+    private static void RenameMp3File(string newName, IFileInfo file)
     {
         var oldName = Path.GetFileNameWithoutExtension(file.Name);
 
         if (oldName != newName)
         {
-            RenameQueue.TryAdd(file, Path.Combine(file.DirectoryName, $"{newName}{file.Extension}"));
+            _renameQueue.Add(file, Path.Combine(file.FolderName, $"{newName}{file.Extension}"));
         }
     }
 
-    private static void RenameXmlFile(DirectoryInfo folder)
+    private static void RenameXmlFile(IFolderInfo folder)
     {
-        var files = folder.GetFiles("*.xml", SearchOption.TopDirectoryOnly);
+        var files = folder.GetFiles("*.xml", SIO.SearchOption.TopDirectoryOnly);
 
         foreach (var file in files)
         {
@@ -183,7 +194,7 @@ internal static class Program
 
             if (file.Name != newFileName)
             {
-                RenameQueue.TryAdd(file, Path.Combine(file.DirectoryName, newFileName));
+                _renameQueue.Add(file, Path.Combine(file.FolderName, newFileName));
             }
         }
     }

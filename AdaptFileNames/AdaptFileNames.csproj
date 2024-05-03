@@ -10,7 +10,7 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<Compile Include="..\..\DownloadFileRenamer\DownloadFileRenamerLib\RenameQueue.cs" Link="RenameQueue.cs" />
+	  <PackageReference Include="DoenaSoft.AbstractionLayer.IO" Version="2.0.4" />
 	</ItemGroup>
 
 </Project>
