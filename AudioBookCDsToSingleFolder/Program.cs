@@ -1,5 +1,7 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using DoenaSoft.AdaptFileNames;
 
 namespace DoenaSoft.AudioBookCDsToSingleFolder
@@ -8,8 +10,46 @@ namespace DoenaSoft.AudioBookCDsToSingleFolder
     {
         private static void Main(string[] args)
         {
-            var root = args[0];
+            Console.WriteLine($"v{Assembly.GetExecutingAssembly().GetName().Version}");
 
+            if (Directory.Exists(args?.FirstOrDefault()))
+            {
+                TrySortRename(args[0]);
+            }
+            else
+            {
+                while (true)
+                {
+                    Console.WriteLine("Enter CD path:");
+
+                    var path = Console.ReadLine();
+
+                    if (!string.IsNullOrWhiteSpace(path))
+                    {
+                        TrySortRename(path);
+                    }
+                    else
+                    {
+                        return;
+                    }
+                }
+            }
+        }
+
+        private static void TrySortRename(string root)
+        {
+            try
+            {
+                SortRename(root);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+        }
+
+        private static void SortRename(string root)
+        {
             var mp3Count = Directory.GetFiles(root, "*.mp3", SearchOption.AllDirectories).Length;
 
             var subFolders = Directory.GetDirectories(root, "*.*", SearchOption.TopDirectoryOnly).OrderBy(f => f);

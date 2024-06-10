@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Reflection;
 using DoenaSoft.AbstractionLayer.IOServices;
 using SIO = System.IO;
 
@@ -18,6 +19,8 @@ internal static class Program
 
     private static int Main(string[] args)
     {
+        Console.WriteLine($"v{Assembly.GetExecutingAssembly().GetName().Version}");
+
         _ioServices = new IOServices();
 
         if (args.Length != 2)
@@ -62,7 +65,9 @@ internal static class Program
 
             ProcessFolder(_ioServices.GetFolderInfo(args[1]));
 
-            _renameQueue.FinishRename();
+            var count = _renameQueue.FinishRename();
+
+            Console.WriteLine($"{count} files renamed.");
         }
         catch (Exception ex)
         {
@@ -140,7 +145,7 @@ internal static class Program
 
         foreach (var file in coverfiles)
         {
-            if (file.Name != "cover.jpg")
+            if (!string.Equals(file.Name, "cover.jpg", StringComparison.InvariantCultureIgnoreCase))
             {
                 _renameQueue.Add(file, Path.Combine(file.FolderName, "cover.jpg"));
             }
