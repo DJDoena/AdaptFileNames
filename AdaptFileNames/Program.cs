@@ -197,7 +197,7 @@ internal static class Program
         {
             var newFileName = $"{folder.Name}{file.Extension}";
 
-            if (file.Name != newFileName)
+            if (!string.Equals(file.Name, newFileName, StringComparison.InvariantCultureIgnoreCase))
             {
                 _renameQueue.Add(file, Path.Combine(file.FolderName, newFileName));
             }
