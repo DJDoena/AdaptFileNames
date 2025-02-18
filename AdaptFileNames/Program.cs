@@ -61,11 +61,11 @@ internal static class Program
         {
             _renameQueue = new RenameQueue(_ioServices);
 
-            _renameQueue.StartRename();
+            _renameQueue.Initialize();
 
-            ProcessFolder(_ioServices.GetFolderInfo(args[1]));
+            ProcessFolder(_ioServices.GetFolder(args[1]));
 
-            var count = _renameQueue.FinishRename();
+            var count = _renameQueue.Commit();
 
             Console.WriteLine($"{count} files renamed.");
         }
@@ -95,7 +95,7 @@ internal static class Program
 
     private static void ProcessFolder(IFolderInfo folder)
     {
-        var subFolders = folder.GetDirectories("*.*", SIO.SearchOption.TopDirectoryOnly);
+        var subFolders = folder.GetFolders("*.*", SIO.SearchOption.TopDirectoryOnly);
 
         foreach (var subFolder in subFolders)
         {

@@ -1,17 +1,17 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFramework>net8.0</TargetFramework>
 		<OutputType>Exe</OutputType>
-		<GenerateAssemblyInfo>true</GenerateAssemblyInfo>
+		<TargetFramework>net8.0</TargetFramework>
 		<Platforms>x64</Platforms>
+		<ApplicationIcon>djdsoft.ico</ApplicationIcon>
+		<GenerateAssemblyInfo>true</GenerateAssemblyInfo>
 		<Version>$([System.DateTime]::Now.ToString("yyyy.MM.dd.HHmm"))</Version>
 		<FileVersion>$([System.DateTime]::Now.ToString("yyyy.MM.dd.HHmm"))</FileVersion>
-		<ApplicationIcon>djdsoft.ico</ApplicationIcon>
 	</PropertyGroup>
 
 	<ItemGroup>
-	  <PackageReference Include="DoenaSoft.AbstractionLayer.IO" Version="2.0.9" />
+	  <PackageReference Include="DoenaSoft.AbstractionLayer.IO" Version="3.0.1" />
 	</ItemGroup>
 
 </Project>
