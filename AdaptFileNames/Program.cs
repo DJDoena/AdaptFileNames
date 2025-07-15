@@ -155,6 +155,7 @@ internal static class Program
     private static void ProcessAudioBook(IFolderInfo folder)
     {
         var files = folder.GetFiles("*.mp3", SIO.SearchOption.TopDirectoryOnly)
+            .Concat(folder.GetFiles("*.mp4", SIO.SearchOption.TopDirectoryOnly))
             .OrderBy(fn => fn.Name)
             .ToList();
 
