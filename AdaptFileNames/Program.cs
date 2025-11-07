@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using DoenaSoft.AbstractionLayer.IOServices;
@@ -23,36 +24,75 @@ internal static class Program
 
         _ioServices = new IOServices();
 
+        string fileType;
+        string folderName;
         if (args.Length != 2)
         {
             Console.WriteLine($"Invalid arg count: {args.Length}: {PrintArgs(args)}");
             Console.WriteLine("Expected:");
             Console.WriteLine("[0] = mp3/epub");
             Console.WriteLine("[1] = folder path");
+
+            if (args.Length > 0 && (args[0] == "mp3" || args[1] == "epub"))
+            {
+                fileType = args[0];
+            }
+            else
+            {
+                do
+                {
+                    Console.WriteLine();
+                    Console.WriteLine($"Enter file type:");
+                    Console.WriteLine($"0: mp3");
+                    Console.WriteLine($"1: epub");
+
+                    fileType = Console.ReadLine().ToLowerInvariant();
+
+                    if (fileType == "0")
+                    {
+                        fileType = "mp3";
+                    }
+                    else if (fileType == "1")
+                    {
+                        fileType = "epub";
+                    }
+                } while (fileType != "mp3" && fileType != "epub");
+            }
+
+            do
+            {
+                Console.WriteLine();
+                Console.WriteLine($"Enter folder path:");
+
+                folderName = Console.ReadLine();
+            } while (!_ioServices.Folder.Exists(folderName));
+        }
+        else
+        {
+            fileType = args[0];
+            folderName = args[1];
+        }
+
+        if (fileType != "mp3" && fileType != "epub")
+        {
+            Console.WriteLine("Invalid file type: " + fileType);
             Console.ReadLine();
 
             return -1;
         }
-        else if (args[0] != "mp3" && args[0] != "epub")
+        else if (!_ioServices.Folder.Exists(folderName))
         {
-            Console.WriteLine("Invalid file type: " + args[0]);
+            Console.WriteLine("Folder does not exist: " + folderName);
             Console.ReadLine();
 
             return -2;
         }
-        else if (!_ioServices.Folder.Exists(args[1]))
-        {
-            Console.WriteLine("Folder does not exist: " + args[1]);
-            Console.ReadLine();
 
-            return -3;
-        }
-
-        if (args[0] == "mp3")
+        if (fileType == "mp3")
         {
             _fileType = FileType.AudioBooks;
         }
-        if (args[0] == "epub")
+        else if (fileType == "epub")
         {
             _fileType = FileType.EBooks;
         }
@@ -63,7 +103,7 @@ internal static class Program
 
             _renameQueue.Initialize();
 
-            ProcessFolder(_ioServices.GetFolder(args[1]));
+            ProcessFolder(_ioServices.GetFolder(folderName));
 
             var count = _renameQueue.Commit();
 
@@ -145,9 +185,11 @@ internal static class Program
 
         foreach (var file in coverfiles)
         {
-            if (!string.Equals(file.Name, "cover.jpg", StringComparison.InvariantCultureIgnoreCase))
+            var targetName = "cover.jpg";
+
+            if (!string.Equals(file.Name, targetName, StringComparison.InvariantCultureIgnoreCase))
             {
-                _renameQueue.Add(file, Path.Combine(file.FolderName, "cover.jpg"));
+                _renameQueue.Add(file, Path.Combine(file.FolderName, targetName));
             }
         }
     }
@@ -161,32 +203,131 @@ internal static class Program
 
         if (files.Count == 1)
         {
-            RenameMp3File(folder.Name, files[0]);
+            RenameMp3File(folder.Name, files[0], -1);
         }
         else
         {
+            var chapterIndex = GetChapterIndex(files);
+
             for (var fileIndex = 0; fileIndex < files.Count; fileIndex++)
             {
                 var fileNumber = FileNumberHelper.GetFileNumber(fileIndex, files.Count);
 
                 var newName = $"{fileNumber} {folder.Name}";
 
-                RenameMp3File(newName, files[fileIndex]);
+                RenameMp3File(newName, files[fileIndex], chapterIndex);
             }
         }
 
         RenameCover(folder);
 
+        RenamePdf(folder);
+
         RenameXmlFile(folder);
     }
 
-    private static void RenameMp3File(string newName, IFileInfo file)
+    private static int GetChapterIndex(IEnumerable<IFileInfo> files)
     {
-        var oldName = Path.GetFileNameWithoutExtension(file.Name);
+        var firstFileParts = files.First().NameWithoutExtension
+            .Split('-')
+            .Select(p => p.Trim())
+            .ToList();
+
+        int chapterIndex = -1;
+        if (firstFileParts.Count > 1)
+        {
+            chapterIndex = -2;
+
+            while (chapterIndex == -2)
+            {
+                Console.WriteLine("Select chapter index:");
+                Console.WriteLine("-1: none");
+
+                for (var partIndex = 0; partIndex < firstFileParts.Count; partIndex++)
+                {
+                    Console.WriteLine($"{partIndex}: {firstFileParts[partIndex]}");
+                }
+
+                var input = Console.ReadLine();
+
+                if (int.TryParse(input, out chapterIndex))
+                {
+                    if (chapterIndex < -1 || chapterIndex >= firstFileParts.Count)
+                    {
+                        chapterIndex = -2;
+                    }
+                }
+            }
+        }
+
+        return chapterIndex;
+    }
+
+    private static void RenameMp3File(string newName
+        , IFileInfo file
+        , int chapterIndex)
+    {
+        newName = newName.Trim();
+
+        if (chapterIndex >= 0)
+        {
+            var fileParts = file.NameWithoutExtension
+                .Split('-')
+                .Select(p => p.Trim())
+                .ToList();
+
+            if (chapterIndex < fileParts.Count)
+            {
+                newName = $"{newName}{AddChapter(fileParts[chapterIndex])}";
+
+                for (var subChapterIndex = chapterIndex + 1; subChapterIndex < fileParts.Count; subChapterIndex++)
+                {
+                    newName = $"{newName} - {fileParts[subChapterIndex]}";
+                }
+            }
+        }
+
+        newName = newName
+            .Replace("  ", " ")
+            .Replace("  ", " ");
+
+        var oldName = file.NameWithoutExtension;
 
         if (oldName != newName)
         {
             _renameQueue.Add(file, Path.Combine(file.FolderName, $"{newName}{file.Extension}"));
+        }
+    }
+
+    private static string AddChapter(string chapter)
+    {
+        if (string.IsNullOrWhiteSpace(chapter))
+        {
+            return string.Empty;
+        }
+        else
+        {
+            chapter = chapter
+                .Trim()
+                .Replace("_", " - ")
+                .TrimEnd();
+
+            return $" - {chapter}";
+        }
+    }
+
+    private static void RenamePdf(IFolderInfo folder)
+    {
+        var pdfFiles = folder.GetFiles("*.pdf", SIO.SearchOption.TopDirectoryOnly);
+
+        foreach (var file in pdfFiles)
+        {
+            var targetName = $"{folder.Name}.pdf";
+
+            if (!string.Equals(file.Name, targetName, StringComparison.InvariantCultureIgnoreCase))
+            {
+                _renameQueue.Add(file, Path.Combine(file.FolderName, targetName));
+            }
         }
     }
 
