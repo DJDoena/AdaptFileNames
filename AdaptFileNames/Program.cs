@@ -64,7 +64,7 @@ internal static class Program
                 Console.WriteLine();
                 Console.WriteLine($"Enter folder path:");
 
-                folderName = Console.ReadLine();
+                folderName = Console.ReadLine().Trim().Trim('"');
             } while (!_ioServices.Folder.Exists(folderName));
         }
         else
@@ -278,11 +278,9 @@ internal static class Program
 
             if (chapterIndex < fileParts.Count)
             {
-                newName = $"{newName}{AddChapter(fileParts[chapterIndex])}";
-
-                for (var subChapterIndex = chapterIndex + 1; subChapterIndex < fileParts.Count; subChapterIndex++)
+                for (var subChapterIndex = chapterIndex; subChapterIndex < fileParts.Count; subChapterIndex++)
                 {
-                    newName = $"{newName} - {fileParts[subChapterIndex]}";
+                    newName = $"{newName}{AddChapter(fileParts[subChapterIndex])}";
                 }
             }
         }
@@ -307,12 +305,12 @@ internal static class Program
         }
         else
         {
-            chapter = chapter
+            var cleaned = chapter
                 .Trim()
                 .Replace("_", " - ")
                 .TrimEnd();
 
-            return $" - {chapter}";
+            return $" - {cleaned}";
         }
     }
 
