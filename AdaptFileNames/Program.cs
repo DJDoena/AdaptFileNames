@@ -28,11 +28,6 @@ internal static class Program
         string folderName;
         if (args.Length != 2)
         {
-            Console.WriteLine($"Invalid arg count: {args.Length}: {PrintArgs(args)}");
-            Console.WriteLine("Expected:");
-            Console.WriteLine("[0] = mp3/epub");
-            Console.WriteLine("[1] = folder path");
-
             if (args.Length > 0 && (args[0] == "mp3" || args[1] == "epub"))
             {
                 fileType = args[0];
@@ -56,7 +51,7 @@ internal static class Program
                     {
                         fileType = "epub";
                     }
-                } while (fileType != "mp3" && fileType != "epub");
+                } while (fileType is not "mp3" and not "epub");
             }
 
             do
@@ -73,7 +68,7 @@ internal static class Program
             folderName = args[1];
         }
 
-        if (fileType != "mp3" && fileType != "epub")
+        if (fileType is not "mp3" and not "epub")
         {
             Console.WriteLine("Invalid file type: " + fileType);
             Console.ReadLine();
@@ -125,14 +120,6 @@ internal static class Program
         return 0;
     }
 
-    private static string PrintArgs(string[] args)
-        => string.Join(" ", args.Select(PrintArg));
-
-    private static string PrintArg(string arg)
-        => !string.IsNullOrEmpty(arg) && !arg.Contains(' ')
-            ? arg
-            : $"\"{arg}\"";
-
     private static void ProcessFolder(IFolderInfo folder)
     {
         var subFolders = folder.GetFolders("*.*", SIO.SearchOption.TopDirectoryOnly);
@@ -158,7 +145,7 @@ internal static class Program
             .Concat(folder.GetFiles("*.mobi", SIO.SearchOption.TopDirectoryOnly))
             .ToList();
 
-        if (files.Count != 0 && files.Count != 2)
+        if (files.Count is not 0 and not 2)
         {
             Console.WriteLine($"Check folder {folder.Name}");
         }
@@ -233,7 +220,7 @@ internal static class Program
             .Select(p => p.Trim())
             .ToList();
 
-        int chapterIndex = -1;
+        var chapterIndex = -1;
         if (firstFileParts.Count > 1)
         {
             chapterIndex = -2;
