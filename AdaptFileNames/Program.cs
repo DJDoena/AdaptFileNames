@@ -215,10 +215,7 @@ internal static class Program
 
     private static int GetChapterIndex(IEnumerable<IFileInfo> files)
     {
-        var firstFileParts = files.First().NameWithoutExtension
-            .Split('-')
-            .Select(p => p.Trim())
-            .ToList();
+        var firstFileParts = files.First().SplitAtDash();
 
         var chapterIndex = -1;
         if (firstFileParts.Count > 1)
@@ -250,6 +247,9 @@ internal static class Program
         return chapterIndex;
     }
 
+    private static List<string> SplitAtDash(this IFileInfo source)
+        => [.. source.NameWithoutExtension.Split(" - ").Select(p => p.Trim())];
+
     private static void RenameMp3File(string newName
         , IFileInfo file
         , int chapterIndex)
@@ -258,10 +258,7 @@ internal static class Program
 
         if (chapterIndex >= 0)
         {
-            var fileParts = file.NameWithoutExtension
-                .Split('-')
-                .Select(p => p.Trim())
-                .ToList();
+            var fileParts = file.SplitAtDash();
 
             if (chapterIndex < fileParts.Count)
             {
@@ -273,7 +270,7 @@ internal static class Program
         }
 
         newName = newName
-            .Replace("  ", " ")
+            .Replace("   ", " ")
             .Replace("  ", " ");
 
         var oldName = file.NameWithoutExtension;
