@@ -31,10 +31,6 @@ Or via .NET CLI:
 dotnet add package DoenaSoft.AdaptBookFileNames
 ```
 
-## Requirements
-
-- .NET 10.0 or higher
-
 ## Usage
 
 ### Basic Audiobook Processing
