@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using AdaptFileNames;
 using DoenaSoft.AbstractionLayer.IOServices;
 using SIO = System.IO;
@@ -12,11 +11,15 @@ internal sealed class EBookProcessor
 
     private readonly IPath _path;
 
+    private readonly IInteraction _interaction;
+
     public EBookProcessor(IRenameQueue renameQueue
-        , IPath path)
+        , IPath path
+        , IInteraction output)
     {
         _renameQueue = renameQueue;
         _path = path;
+        _interaction = output;
     }
 
     internal void Process(IFolderInfo folder)
@@ -27,14 +30,23 @@ internal sealed class EBookProcessor
 
         if (files.Count is not 0 and not 2)
         {
-            Console.WriteLine($"Check folder {folder.Name}");
+            _interaction.WriteLine($"Check folder {folder.Name}");
+        }
+
+        _interaction.WriteLine($"Book name is set to '{folder.Name}. Enter new name here or simply press enter for takin folder name:");
+
+        var bookName = _interaction.ReadLine();
+
+        if (string.IsNullOrWhiteSpace(bookName))
+        {
+            bookName = folder.Name;
         }
 
         foreach (var file in files)
         {
             var oldName = _path.GetFileNameWithoutExtension(file.Name);
 
-            var newName = folder.Name;
+            var newName = bookName;
 
             if (oldName != newName)
             {

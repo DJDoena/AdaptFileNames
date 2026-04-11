@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Reflection;
+using AdaptFileNames;
 using DoenaSoft.AbstractionLayer.IOServices;
 using SIO = System.IO;
 
@@ -7,6 +8,8 @@ namespace DoenaSoft.AdaptFileNames;
 
 internal static class Program
 {
+    private static IInteraction _interaction;
+
     private static FileType _fileType;
 
     private static IIOServices _ioServices;
@@ -15,7 +18,9 @@ internal static class Program
 
     private static int Main(string[] args)
     {
-        Console.WriteLine($"v{Assembly.GetExecutingAssembly().GetName().Version}");
+        _interaction = new Interaction();
+
+        _interaction.WriteLine($"v{Assembly.GetExecutingAssembly().GetName().Version}");
 
         _ioServices = new IOServices();
 
@@ -31,12 +36,12 @@ internal static class Program
             {
                 do
                 {
-                    Console.WriteLine();
-                    Console.WriteLine($"Enter file type:");
-                    Console.WriteLine($"0: mp3");
-                    Console.WriteLine($"1: epub");
+                    _interaction.WriteLine();
+                    _interaction.WriteLine($"Enter file type:");
+                    _interaction.WriteLine($"0: mp3");
+                    _interaction.WriteLine($"1: epub");
 
-                    fileType = Console.ReadLine().ToLowerInvariant();
+                    fileType = _interaction.ReadLine().ToLowerInvariant();
 
                     if (fileType == "0")
                     {
@@ -51,10 +56,10 @@ internal static class Program
 
             do
             {
-                Console.WriteLine();
-                Console.WriteLine($"Enter folder path:");
+                _interaction.WriteLine();
+                _interaction.WriteLine($"Enter folder path:");
 
-                folderName = Console.ReadLine().Trim().Trim('"');
+                folderName = _interaction.ReadLine().Trim().Trim('"');
             } while (!_ioServices.Folder.Exists(folderName));
         }
         else
@@ -65,15 +70,15 @@ internal static class Program
 
         if (fileType is not "mp3" and not "epub")
         {
-            Console.WriteLine("Invalid file type: " + fileType);
-            Console.ReadLine();
+            _interaction.WriteLine("Invalid file type: " + fileType);
+            _interaction.ReadLine();
 
             return -1;
         }
         else if (!_ioServices.Folder.Exists(folderName))
         {
-            Console.WriteLine("Folder does not exist: " + folderName);
-            Console.ReadLine();
+            _interaction.WriteLine("Folder does not exist: " + folderName);
+            _interaction.ReadLine();
 
             return -2;
         }
@@ -97,20 +102,20 @@ internal static class Program
 
             var count = _renameQueue.Commit();
 
-            Console.WriteLine($"{count} files renamed.");
+            _interaction.WriteLine($"{count} files renamed.");
         }
         catch (Exception ex)
         {
-            Console.WriteLine(ex.Message);
+            _interaction.WriteLine(ex.Message);
 
             if (ex.InnerException != null)
             {
-                Console.WriteLine(ex.InnerException.Message);
+                _interaction.WriteLine(ex.InnerException.Message);
             }
         }
 
-        Console.WriteLine("Press <Enter> to exit.");
-        Console.ReadLine();
+        _interaction.WriteLine("Press <Enter> to exit.");
+        _interaction.ReadLine();
 
         return 0;
     }
@@ -126,11 +131,11 @@ internal static class Program
 
         if (_fileType == FileType.EBooks)
         {
-            (new EBookProcessor(_renameQueue, _ioServices.Path)).Process(folder);
+            (new EBookProcessor(_renameQueue, _ioServices.Path, _interaction)).Process(folder);
         }
         else if (_fileType == FileType.AudioBooks)
         {
-            (new AudioBookProcessor(_renameQueue, _ioServices.Path)).Process(folder);
+            (new AudioBookProcessor(_renameQueue, _ioServices.Path, _interaction)).Process(folder);
         }
     }
 
