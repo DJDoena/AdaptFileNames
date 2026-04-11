@@ -2,72 +2,71 @@
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using DoenaSoft.AdaptFileNames;
+using DoenaSoft.AdaptBookFileNames;
 
-namespace DoenaSoft.AudioBookCDsToSingleFolder
+namespace DoenaSoft.AudioBookCDsToSingleFolder;
+
+internal static class Program
 {
-    internal static class Program
+    private static void Main(string[] args)
     {
-        private static void Main(string[] args)
+        Console.WriteLine($"v{Assembly.GetExecutingAssembly().GetName().Version}");
+
+        if (Directory.Exists(args?.FirstOrDefault()))
         {
-            Console.WriteLine($"v{Assembly.GetExecutingAssembly().GetName().Version}");
+            TrySortRename(args[0]);
+        }
+        else
+        {
+            while (true)
+            {
+                Console.WriteLine("Enter CD path:");
 
-            if (Directory.Exists(args?.FirstOrDefault()))
-            {
-                TrySortRename(args[0]);
-            }
-            else
-            {
-                while (true)
+                var path = Console.ReadLine();
+
+                if (!string.IsNullOrWhiteSpace(path))
                 {
-                    Console.WriteLine("Enter CD path:");
-
-                    var path = Console.ReadLine();
-
-                    if (!string.IsNullOrWhiteSpace(path))
-                    {
-                        TrySortRename(path);
-                    }
-                    else
-                    {
-                        return;
-                    }
+                    TrySortRename(path);
+                }
+                else
+                {
+                    return;
                 }
             }
         }
+    }
 
-        private static void TrySortRename(string root)
+    private static void TrySortRename(string root)
+    {
+        try
         {
-            try
-            {
-                SortRename(root);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-            }
+            SortRename(root);
         }
-
-        private static void SortRename(string root)
+        catch (Exception ex)
         {
-            var mp3Count = Directory.GetFiles(root, "*.mp3", SearchOption.AllDirectories).Length;
+            Console.WriteLine(ex.Message);
+        }
+    }
 
-            var subFolders = Directory.GetDirectories(root, "*.*", SearchOption.TopDirectoryOnly).OrderBy(f => f);
+    private static void SortRename(string root)
+    {
+        var mp3Count = Directory.GetFiles(root, "*.mp3", SearchOption.AllDirectories).Length;
 
-            var fileIndex = 0;
+        var subFolders = Directory.GetDirectories(root, "*.*", SearchOption.TopDirectoryOnly).OrderBy(f => f);
 
-            foreach (var subFolder in subFolders)
+        var fileIndex = 0;
+
+        foreach (var subFolder in subFolders)
+        {
+            var mp3Files = Directory.GetFiles(subFolder, "*.mp3", SearchOption.TopDirectoryOnly).OrderBy(f => f);
+
+            foreach (var mp3File in mp3Files)
             {
-                var mp3Files = Directory.GetFiles(subFolder, "*.mp3", SearchOption.TopDirectoryOnly).OrderBy(f => f);
+                var fileNumber = FileNumberHelper.GetFileNumber(fileIndex, mp3Count);
 
-                foreach (var mp3File in mp3Files)
-                {
-                    var fileNumber = FileNumberHelper.GetFileNumber(fileIndex, mp3Count);
+                fileIndex++;
 
-                    fileIndex++;
-
-                    File.Move(mp3File, Path.Combine(root, $"{fileNumber}.mp3"));
-                }
+                File.Move(mp3File, Path.Combine(root, $"{fileNumber}.mp3"));
             }
         }
     }
