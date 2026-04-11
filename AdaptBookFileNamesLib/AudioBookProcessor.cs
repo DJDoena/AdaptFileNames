@@ -45,7 +45,7 @@ public sealed class AudioBookProcessor : IBookProcessor
             .OrderBy(fn => fn.Name)
             .ToList();
 
-        _interaction.WriteLine($"Book name is set to '{folder.Name}. Enter new name here or simply press enter for taking folder name:");
+        _interaction.WriteLine($"Book name is set to \"{folder.Name}\". Enter new name here or simply press enter for taking folder name:");
 
         var bookName = _interaction.ReadLine();
 
