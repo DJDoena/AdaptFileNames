@@ -2,7 +2,7 @@
 
 	<PropertyGroup>
 		<AssemblyName>DoenaSoft.AdaptBookFileNames</AssemblyName>
-		<Rootnamespace>DoenaSoft.AdaptBookFileNames</Rootnamespace>
+		<Rootnamespace>DoenaSoft.AdaptFileNames</Rootnamespace>
 		<OutputType>Library</OutputType>
 		<TargetFramework>net10.0</TargetFramework>
 		<GenerateAssemblyInfo>true</GenerateAssemblyInfo>
