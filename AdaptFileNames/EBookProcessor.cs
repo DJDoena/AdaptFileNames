@@ -33,7 +33,7 @@ internal sealed class EBookProcessor
             _interaction.WriteLine($"Check folder {folder.Name}");
         }
 
-        _interaction.WriteLine($"Book name is set to '{folder.Name}. Enter new name here or simply press enter for takin folder name:");
+        _interaction.WriteLine($"Book name is set to '{folder.Name}. Enter new name here or simply press enter for taking folder name:");
 
         var bookName = _interaction.ReadLine();
 
