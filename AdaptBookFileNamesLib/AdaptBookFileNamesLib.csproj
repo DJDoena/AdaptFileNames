@@ -36,7 +36,7 @@
 
 	<ItemGroup>
 		<None Include="readme.md" Pack="true" PackagePath="\" />
-		<None Include="djdsoft.png" Pack="true" PackagePath="\" Condition="Exists('djdsoft.png')" />
+		<None Include="djdsoft.png" Pack="true" PackagePath="\" />
 	</ItemGroup>
 
 </Project>
