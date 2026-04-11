@@ -1,7 +1,6 @@
-﻿using System;
+﻿using DoenaSoft.AbstractionLayer.IOServices;
+using System;
 using System.Reflection;
-using AdaptFileNames;
-using DoenaSoft.AbstractionLayer.IOServices;
 using SIO = System.IO;
 
 namespace DoenaSoft.AdaptFileNames;

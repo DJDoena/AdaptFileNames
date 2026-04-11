@@ -1,9 +1,9 @@
-﻿using System;
+﻿using DoenaSoft.AbstractionLayer.IOServices;
+using System;
 using System.Linq;
-using DoenaSoft.AbstractionLayer.IOServices;
 using SIO = System.IO;
 
-namespace AdaptFileNames;
+namespace DoenaSoft.AdaptFileNames;
 
 internal class Helper
 {

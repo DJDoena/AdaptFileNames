@@ -1,13 +1,15 @@
-﻿using System;
+﻿using DoenaSoft.AbstractionLayer.IOServices;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using AdaptFileNames;
-using DoenaSoft.AbstractionLayer.IOServices;
 using SIO = System.IO;
 
 namespace DoenaSoft.AdaptFileNames;
 
-internal sealed class AudioBookProcessor
+/// <summary>
+/// Processes audiobook files (MP3, M4A, MP4) in folders, renaming them with consistent naming conventions including sequential numbering and chapter information.
+/// </summary>
+public sealed class AudioBookProcessor : IBookProcessor
 {
     private readonly IRenameQueue _renameQueue;
 
@@ -15,6 +17,12 @@ internal sealed class AudioBookProcessor
 
     private readonly IInteraction _interaction;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="AudioBookProcessor"/> class.
+    /// </summary>
+    /// <param name="renameQueue">The rename queue for queueing file rename operations.</param>
+    /// <param name="path">The path service for file path operations.</param>
+    /// <param name="output">The interaction service for user input and output.</param>
     public AudioBookProcessor(IRenameQueue renameQueue
         , IPath path
         , IInteraction output)
@@ -24,7 +32,12 @@ internal sealed class AudioBookProcessor
         _interaction = output;
     }
 
-    internal void Process(IFolderInfo folder)
+    /// <summary>
+    /// Processes all audiobook files in the specified folder, renaming them with sequential numbers, book name, and optional chapter information.
+    /// Also renames associated files such as cover images, e-books, and XML files in the same folder.
+    /// </summary>
+    /// <param name="folder">The folder containing audiobook files to process.</param>
+    public void Process(IFolderInfo folder)
     {
         var files = folder.GetFiles("*.mp3", SIO.SearchOption.TopDirectoryOnly)
             .Concat(folder.GetFiles("*.mp4", SIO.SearchOption.TopDirectoryOnly))

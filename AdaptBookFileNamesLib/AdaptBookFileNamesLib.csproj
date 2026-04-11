@@ -1,0 +1,41 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<AssemblyName>DoenaSoft.AdaptBookFileNames</AssemblyName>
+		<Rootnamespace>DoenaSoft.AdaptBookFileNames</Rootnamespace>
+		<OutputType>Library</OutputType>
+		<TargetFramework>net10.0</TargetFramework>
+		<GenerateAssemblyInfo>true</GenerateAssemblyInfo>
+		<PackageId>DoenaSoft.AdaptBookFileNames</PackageId>
+		<Authors>DJ Doena</Authors>
+		<Company>Doena Soft.</Company>
+		<Product>AdaptBookFileNames</Product>
+		<Description>A .NET library for organizing and standardizing audiobook and e-book file names with consistent naming conventions. Supports MP3, M4A, MP4 audiobooks and EPUB, MOBI e-books with sequential numbering and chapter management.</Description>
+		<Copyright>2025 - 206</Copyright>
+		<PackageProjectUrl>https://github.com/DJDoena/AdaptFileNames</PackageProjectUrl>
+		<RepositoryUrl>https://github.com/DJDoena/AdaptFileNames</RepositoryUrl>
+		<RepositoryType>git</RepositoryType>
+		<PackageTags>audiobook;ebook;rename;file-management;epub;mobi;mp3;batch-processing;library</PackageTags>
+		<PackageLicenseExpression>MIT</PackageLicenseExpression>
+		<PackageReadmeFile>readme.md</PackageReadmeFile>
+		<PackageIcon>djdsoft.png</PackageIcon>
+		<PackageReleaseNotes>Initial release with audiobook and e-book file renaming capabilities.</PackageReleaseNotes>
+		<GenerateDocumentationFile>true</GenerateDocumentationFile>
+		<PublishRepositoryUrl>true</PublishRepositoryUrl>
+		<EmbedUntrackedSources>true</EmbedUntrackedSources>
+		<IncludeSymbols>true</IncludeSymbols>
+		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
+		<Version>1.0.0</Version>
+		<FileVersion>1.0.0</FileVersion>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="DoenaSoft.AbstractionLayer.IO" Version="5.0.1" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<None Include="readme.md" Pack="true" PackagePath="\" />
+		<None Include="djdsoft.png" Pack="true" PackagePath="\" Condition="Exists('djdsoft.png')" />
+	</ItemGroup>
+
+</Project>
