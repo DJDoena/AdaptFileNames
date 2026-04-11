@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<AssemblyName>DoenaSoft.AdaptFileNames</AssemblyName>
+		<AssemblyName>AdaptFileNames</AssemblyName>
 		<Rootnamespace>DoenaSoft.AdaptFileNames</Rootnamespace>
 		<OutputType>Exe</OutputType>
 		<TargetFramework>net10.0</TargetFramework>
