@@ -1,7 +1,4 @@
 <Solution>
-  <Configurations>
-    <BuildType Name="Debug" />
-  </Configurations>
   <Project Path="../AdaptBookFileNamesLib/AdaptBookFileNamesLib.csproj" Id="b7a0600f-20cd-491e-a1db-d40dcbf94fdd" />
   <Project Path="AdaptFileNames.csproj" />
 </Solution>
