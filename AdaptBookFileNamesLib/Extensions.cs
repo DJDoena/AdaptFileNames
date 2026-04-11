@@ -7,6 +7,5 @@ namespace DoenaSoft.AdaptBookFileNames;
 internal static class Extensions
 {
     internal static List<string> SplitAtDash(this IFileInfo source)
-        => [.. source.NameWithoutExtension.Split(" - ").Select(p => p.Trim())];
-
+        => [.. source.NameWithoutExtension.Split([" - "], System.StringSplitOptions.None).Select(p => p.Trim())];
 }
