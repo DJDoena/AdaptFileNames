@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace DoenaSoft.AdaptFileNames;
+namespace DoenaSoft.AdaptBookFileNames;
 
 internal static class Extensions
 {

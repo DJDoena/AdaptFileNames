@@ -3,7 +3,7 @@ using System;
 using System.Reflection;
 using SIO = System.IO;
 
-namespace DoenaSoft.AdaptFileNames;
+namespace DoenaSoft.AdaptBookFileNames;
 
 internal static class Program
 {

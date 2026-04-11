@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace DoenaSoft.AdaptFileNames;
+namespace DoenaSoft.AdaptBookFileNames;
 
 internal sealed class Interaction : IInteraction
 {

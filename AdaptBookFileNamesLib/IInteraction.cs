@@ -1,4 +1,4 @@
-﻿namespace DoenaSoft.AdaptFileNames;
+﻿namespace DoenaSoft.AdaptBookFileNames;
 
 /// <summary>
 /// Defines interaction methods for user input and output operations.

@@ -40,7 +40,7 @@ dotnet add package DoenaSoft.AdaptBookFileNames
 ### Basic Audiobook Processing
 
 ```csharp
-using DoenaSoft.AdaptFileNames;
+using DoenaSoft.AdaptBookFileNames;
 using DoenaSoft.AbstractionLayer.IOServices;
 
 var ioServices = new IOServices();
@@ -65,7 +65,7 @@ Console.WriteLine($"{renamedCount} files renamed.");
 ### Basic E-Book Processing
 
 ```csharp
-using DoenaSoft.AdaptFileNames;
+using DoenaSoft.AdaptBookFileNames;
 using DoenaSoft.AbstractionLayer.IOServices;
 
 var ioServices = new IOServices();

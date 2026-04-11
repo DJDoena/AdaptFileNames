@@ -2,7 +2,7 @@
 using System.Linq;
 using SIO = System.IO;
 
-namespace DoenaSoft.AdaptFileNames;
+namespace DoenaSoft.AdaptBookFileNames;
 
 /// <summary>
 /// Processes e-book files (EPUB, MOBI) in folders, renaming them with consistent naming conventions based on the book name.

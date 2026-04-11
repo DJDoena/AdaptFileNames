@@ -2,7 +2,7 @@
 
 	<PropertyGroup>
 		<AssemblyName>DoenaSoft.AdaptBookFileNames</AssemblyName>
-		<Rootnamespace>DoenaSoft.AdaptFileNames</Rootnamespace>
+		<Rootnamespace>DoenaSoft.AdaptBookFileNames</Rootnamespace>
 		<OutputType>Library</OutputType>
 		<TargetFramework>net10.0</TargetFramework>
 		<GenerateAssemblyInfo>true</GenerateAssemblyInfo>
@@ -25,8 +25,8 @@
 		<EmbedUntrackedSources>true</EmbedUntrackedSources>
 		<IncludeSymbols>true</IncludeSymbols>
 		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
-		<Version>1.0.0</Version>
-		<FileVersion>1.0.0</FileVersion>
+		<Version>1.0.1</Version>
+		<FileVersion>1.0.1</FileVersion>
 	</PropertyGroup>
 
 	<ItemGroup>

@@ -1,4 +1,4 @@
-﻿namespace DoenaSoft.AdaptFileNames;
+﻿namespace DoenaSoft.AdaptBookFileNames;
 
 internal static class FileNumberHelper
 {

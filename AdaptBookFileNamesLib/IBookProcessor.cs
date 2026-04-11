@@ -1,6 +1,6 @@
 ﻿using DoenaSoft.AbstractionLayer.IOServices;
 
-namespace DoenaSoft.AdaptFileNames;
+namespace DoenaSoft.AdaptBookFileNames;
 
 /// <summary>
 /// Defines a processor for organizing and renaming book files within a folder.

@@ -3,7 +3,7 @@ using System;
 using System.Linq;
 using SIO = System.IO;
 
-namespace DoenaSoft.AdaptFileNames;
+namespace DoenaSoft.AdaptBookFileNames;
 
 internal class Helper
 {

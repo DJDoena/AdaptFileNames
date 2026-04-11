@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using SIO = System.IO;
 
-namespace DoenaSoft.AdaptFileNames;
+namespace DoenaSoft.AdaptBookFileNames;
 
 /// <summary>
 /// Processes audiobook files (MP3, M4A, MP4) in folders, renaming them with consistent naming conventions including sequential numbering and chapter information.
