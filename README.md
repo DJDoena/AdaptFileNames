@@ -19,11 +19,6 @@ AdaptFileNames is a tool designed to help organize and standardize file names fo
 - **Interactive Mode**: Prompts for book names and chapter selection when needed
 - **Command-Line Support**: Can be run in batch mode with command-line arguments
 
-## Requirements
-
-- .NET 10.0 or higher
-- Windows, macOS, or Linux
-
 ## Installation
 
 ### From Source

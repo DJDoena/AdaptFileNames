@@ -1,4 +1,7 @@
 <Solution>
+  <Folder Name="/Solution Items/">
+    <File Path="../README.md" />
+  </Folder>
   <Project Path="../AdaptBookFileNamesLib/AdaptBookFileNamesLib.csproj" Id="b7a0600f-20cd-491e-a1db-d40dcbf94fdd" />
   <Project Path="AdaptFileNames.csproj" />
 </Solution>
