@@ -1,6 +1,7 @@
-﻿using DoenaSoft.AbstractionLayer.IOServices;
-using System;
+﻿using System;
 using System.Reflection;
+using DoenaSoft.AbstractionLayer.IOServices;
+using DoenaSoft.AbstractionLayer.UI.Contracts;
 using SIO = System.IO;
 
 namespace DoenaSoft.AdaptBookFileNames;
@@ -93,7 +94,7 @@ internal static class Program
 
         try
         {
-            _renameQueue = new RenameQueue(_ioServices);
+            _renameQueue = new RenameQueue(_ioServices, new ConsoleLogger());
 
             _renameQueue.Initialize();
 
