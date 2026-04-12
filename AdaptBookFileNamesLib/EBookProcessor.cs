@@ -1,5 +1,6 @@
-﻿using DoenaSoft.AbstractionLayer.IOServices;
-using System.Linq;
+﻿using System.Linq;
+using DoenaSoft.AbstractionLayer.IOServices;
+using DoenaSoft.AbstractionLayer.UI.Contracts;
 using SIO = System.IO;
 
 namespace DoenaSoft.AdaptBookFileNames;
