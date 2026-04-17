@@ -100,9 +100,9 @@ internal static class Program
 
             ProcessFolder(_ioServices.GetFolder(folderName));
 
-            var count = _renameQueue.Commit();
+            var result = _renameQueue.Commit();
 
-            _interaction.WriteLine($"{count} files renamed.");
+            _interaction.WriteLine($"{result.Success} files renamed.");
         }
         catch (Exception ex)
         {
