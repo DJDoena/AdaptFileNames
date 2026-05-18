@@ -23,6 +23,10 @@ internal sealed class Interaction : IInteraction
     public void Write(string message)
         => Console.Write(message);
 
-    public char ReadKey(bool intercept = false)
-        => Console.ReadKey(intercept).KeyChar;
+    public (char key, KeyModifiers modifiers) ReadKey(bool intercept)
+    {
+        var key = Console.ReadKey(intercept);
+
+        return (key.KeyChar, (KeyModifiers)key.Modifiers);
+    }
 }
