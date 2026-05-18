@@ -42,7 +42,14 @@ public sealed class EBookProcessor : IBookProcessor
             .Concat(folder.GetFiles("*.mobi", SIO.SearchOption.TopDirectoryOnly))
             .ToList();
 
-        if (files.Count is not 0 and not 2)
+        if (files.Count == 0)
+        {
+            _interaction.WriteLine($"No e-book files found in folder {folder.Name}. Skipping.");
+
+            return;
+        }
+
+        if (files.Count is not 2)
         {
             _interaction.WriteLine($"Check folder {folder.Name}");
         }

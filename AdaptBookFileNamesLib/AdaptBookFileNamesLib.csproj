@@ -26,8 +26,8 @@
 		<EmbedUntrackedSources>true</EmbedUntrackedSources>
 		<IncludeSymbols>true</IncludeSymbols>
 		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
-		<Version>1.0.8</Version>
-		<FileVersion>1.0.8</FileVersion>
+		<Version>1.0.9</Version>
+		<FileVersion>1.0.9</FileVersion>
 	</PropertyGroup>
 
 	<ItemGroup>
