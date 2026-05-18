@@ -26,13 +26,13 @@
 		<EmbedUntrackedSources>true</EmbedUntrackedSources>
 		<IncludeSymbols>true</IncludeSymbols>
 		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
-		<Version>1.0.9</Version>
-		<FileVersion>1.0.9</FileVersion>
+		<Version>1.0.10</Version>
+		<FileVersion>1.0.10</FileVersion>
 	</PropertyGroup>
 
 	<ItemGroup>
 		<PackageReference Include="DoenaSoft.AbstractionLayer.IO" Version="6.0.6" />
-		<PackageReference Include="DoenaSoft.AbstractionLayer.UI" Version="2.0.7" />
+		<PackageReference Include="DoenaSoft.AbstractionLayer.UI" Version="2.0.8" />
 	</ItemGroup>
 
 	<ItemGroup>
