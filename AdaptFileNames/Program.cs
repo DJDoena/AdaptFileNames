@@ -102,7 +102,7 @@ internal static class Program
 
             var result = _renameQueue.Commit();
 
-            _interaction.WriteLine($"{result.Success} files renamed.");
+            _interaction.WriteLine($"{result.SuccessCount} files renamed.");
         }
         catch (Exception ex)
         {
